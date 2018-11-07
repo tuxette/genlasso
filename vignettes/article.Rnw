@@ -236,7 +236,7 @@ plot(out)
 % PLOT START
 \setkeys{Gin}{width=4.5in,height=4.5in}
 \begin{center}
-<<label=figeq1f,fig=TRUE,echo=FALSE>>=
+<<label=figeq1f,echo=FALSE>>=
 <<eq1f>>
 @
 \end{center}
@@ -248,7 +248,7 @@ zero, except the first coordinate, drawn in red.
 Finally, it is easy to extract the coefficients $\beta$ for a particular value (or values) of
 $\lambda$. Here we calculate the coefficients for the tuning parmeter $\lambda = \sqrt{n\log(p)}$,
 as is suggested for model selection consistency by recent theory:
-<<eq1g include=FALSE>>=
+<<eq1g, include=FALSE>>=
 coef(out, lambda=sqrt(n*log(p)))
 @
 This is reassuring, as it essentially recovers the true model from which we had simulated
@@ -314,7 +314,7 @@ plot(out, lambda=1)
 % PLOT START
 \setkeys{Gin}{width=4in}
 \begin{center}
-<<label=fig2c,fig=TRUE,echo=FALSE>>=
+<<label=fig2c,echo=FALSE>>=
 <<eq2c>>
 @
 \end{center}
@@ -342,14 +342,14 @@ Another common structure is the 2d grid, and with this underlying graph problem
 We generate data in the form of a 16 by 16 grid of points; the mean of the data is
 equal to $2$ for points within a distance of $4$ from the middle of the grid, and $1$ for
 all other points.
-<<eq8a, echo=true>>=
+<<eq8a, echo=TRUE>>=
 set.seed(1)
 y = matrix(runif(256), 16, 16)
 i = (row(y) - 8.5)^2 + (col(y) - 8.5)^2 <= 4^2
 y[i] = y[i] + 1
 @
 To compute the solution path of this problem, we call the \code{fusedlasso2d} function:
-<<eq8b, echo=true>>=
+<<eq8b, echo=TRUE>>=
 out = fusedlasso2d(y)
 @
 Since the input data \code{y} is a matrix, the function knows the dimensions of the 2d grid.
@@ -361,7 +361,7 @@ co = coef(out, nlam=5)
 @
 and plotting them, along with the original data $y$ (in the top-left corner),
 gives a rough understanding of what the solution path looks like:
-<<eq8c, echo=false, include=false, height=4.5, width=6>>=
+<<eq8c, echo=FALSE, include=FALSE, fig.height=4.5, fig.width=6>>=
 par(mar=c(1,1,2,1),mfrow=c(2,3))
 cols = terrain.colors(30)
 zlim = range(c(co$beta,y))
@@ -375,7 +375,7 @@ for (i in 1:5) {
 % PLOT START
 \setkeys{Gin}{width=6in,height=4.5in}
 \begin{center}
-<<label=fig8c,fig=TRUE,echo=FALSE>>=
+<<label=fig8c,echo=FALSE>>=
 <<eq8c>>
 @
 \end{center}
@@ -424,7 +424,7 @@ nonzero level, actually) it is more efficient to solve the problem with $\gamma=
 then soft-threshold to yield the solutions.
 
 We demonstrate this by revisiting the 1d fused lasso example of Section \ref{sec:fused1d}:
-<<eq6a, echo=true>>=
+<<eq6a, echo=TRUE>>=
 set.seed(1)
 n = 100
 i = 1:n
@@ -435,12 +435,12 @@ beta1 = coef(out, lambda=1.5)$beta
 @
 To compute the solution at $\lambda=1.5$ and $\gamma=1$, we could call \code{fusedlasso1d}
 with \code{gamma=1}, or simply soft-threshold:
-<<eq6b, echo=true>>=
+<<eq6b, echo=TRUE>>=
 beta2 = softthresh(out, lambda=1.5, gamma=1)
 @
 The effect of soft-thresholding is apparent when looking at the original and thresholded
 estimates (with the dashed line showing the thresholding level $\gamma\cdot\lambda=1.5$):
-<<eq7x, echo=false, include=false>>=
+<<eq7x, echo=FALSE, include=FALSE>>=
 plot(1:n, y, xlab="Position", ylab="Estimates")
 abline(h=1.5, lty="dashed")
 lines(1:n, beta1)
@@ -451,7 +451,7 @@ legend("topleft",lty=1,col=c("black","red"),
 % PLOT START
 \setkeys{Gin}{width=4in}
 \begin{center}
-<<label=fig7x,fig=TRUE,echo=FALSE>>=
+<<label=fig7x,echo=FALSE>>=
 <<eq7x>>
 @
 \end{center}
@@ -493,14 +493,14 @@ plot(out, lambda=n)
 % PLOT START
 \setkeys{Gin}{width=4in}
 \begin{center}
-<<label=fig3b,fig=TRUE,echo=FALSE>>=
+<<label=fig3b,echo=FALSE>>=
 <<eq3b>>
 @
 \end{center}
 % PLOT END
 Higher order plots are just as easy, as shown by the following cubic fit
 to data generated with a mean given by a sine curve:
-<<eq4gib, echo=true, include=FALSE>>=
+<<eq4gib, echo=TRUE, include=FALSE>>=
 n = 100
 y = sin(1:n/n*2*pi) + rnorm(n, sd=0.3)
 out = trendfilter(y, ord=3)
@@ -509,7 +509,7 @@ plot(out, lambda=n)
 % PLOT START
 \setkeys{Gin}{width=4in}
 \begin{center}
-<<label=fig4abc,fig=TRUE,echo=FALSE>>=
+<<label=fig4abc,echo=FALSE>>=
 <<eq4gib>>
 @
 \end{center}
@@ -539,7 +539,7 @@ also be fit with a non-identity predictor; simply use the \code{X} argument.
 For automatic choice of $\lambda$ in trend filtering problems there is an easy to use,
 pre-built cross-validation function. Here, we again generate some data which that has a
 piecewise constant mean, and fit a piecewise constant model:
-<<eq5a, echo=true>>=
+<<eq5a, echo=TRUE>>=
 set.seed(1)
 n = 100
 y = rep(sample(1:8,5), each=n/5) + rnorm(n, sd=0.8)
@@ -550,7 +550,7 @@ out = trendfilter(y, ord=0)
 cross-validation in to choose $\lambda$. This places every $k$th point in the same fold,
 so the folds are non-random and calling \code{cv.trendfilter} twice will yield the same
 result. The default is $k=10$ folds.
-<<eq5b, echo=true, results=hide>>=
+<<eq5b, echo=TRUE, results='hide'>>=
 cv = cv.trendfilter(out)
 @
 Now we plot the estimate at the value of $\lambda$ the minimizes the cross-validated error:
@@ -560,7 +560,7 @@ plot(out, lambda=cv$lambda.min, main="Minimal CV error")
 % PLOT START
 \setkeys{Gin}{width=4in}
 \begin{center}
-<<label=fig5c,fig=TRUE,echo=FALSE>>=
+<<label=fig5c,echo=FALSE>>=
 <<eq5c>>
 @
 \end{center}
@@ -573,7 +573,7 @@ plot(out, lambda=cv$lambda.1se, main="One standard error rule")
 @
 \begin{center}
 \setkeys{Gin}{width=4in}
-<<label=fig5d,fig=TRUE,echo=FALSE>>=
+<<label=fig5d,echo=FALSE>>=
 <<eq5d>>
 @
 \end{center}
